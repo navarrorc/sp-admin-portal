@@ -1,0 +1,21 @@
+	{
+		"compilerOptions": {
+			"target": "es5",
+			"module": "commonjs",
+			"noImplicitAny": false,
+			"removeComments": true,
+			"preserveConstEnums": true,
+			"declaration": true,
+			"out": "tsoutput.js",
+			"sourceMap": false
+		},
+		"formatCodeOptions": {
+			"indentSize": 2,
+			"tabSize": 2
+		},
+		"files": [
+			"components/typescript/app.ts",
+			"components/typescript/products/productListCtrl.ts",
+			"components/typescript/products/product.ts"
+		]
+	}
