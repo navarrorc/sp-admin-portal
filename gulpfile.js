@@ -50,8 +50,8 @@ gulp.task('sass', function () {
  */
 gulp.task('watch', function () {
   gulp.watch(['builds/development/*.html', 'builds/development/views/**/*.html'], ['html']);  // html files for livereload
-	gulp.watch(['components/typescript/**/*.ts'], ['scripts']); // typescript files for compilation
-	gulp.watch(['components/sass/style.scss'], ['sass']); // sass files for compilation
+	gulp.watch(['components/typescript/**/*.ts'], ['scripts','html']); // typescript files for compilation
+	gulp.watch(['components/sass/style.scss'], ['sass', 'html']); // sass files for compilation
 });
 /**
  * default
