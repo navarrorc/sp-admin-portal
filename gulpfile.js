@@ -20,8 +20,7 @@ gulp.task('connect', function () {
  * html (Reload index.html)
  */
 gulp.task('html', function () {
-  gulp
-		.src('builds/development/*.html')
+  gulp.src('builds/development/*.html')
     .pipe(connect.reload());
 });
 /**
@@ -37,8 +36,7 @@ gulp.task('typescript', function () {
  * sass
  */
 gulp.task('sass', function () {
-  gulp
-		.src(sassSources)
+  gulp.src(sassSources)
     .pipe(compass({
 			css: 'builds/development/css',
 			sass: 'components/sass',
@@ -56,7 +54,7 @@ gulp.task('sass', function () {
 gulp.task('watch', function () {
   gulp.watch(['builds/development/*.html', 'builds/development/views/**/*.html'], ['html']);  // html files for livereload
 	gulp.watch(['components/typescript/**/**/*.ts'], ['typescript']); // typescript files for compilation
-	gulp.watch(['components/sass/style.scss'], ['sass']); // sass files for compilation
+	gulp.watch(['components/sass/**/*.scss'], ['sass']); // sass files for compilation
 });
 /**
  * default

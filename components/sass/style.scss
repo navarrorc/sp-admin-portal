@@ -1,4 +1,6 @@
-$text-color: hsl(100,100%,25%); 
+//@import "compass/reset";
+@import "partials/variables";
+ 
 h1 {
 	color: $text-color;
 }
