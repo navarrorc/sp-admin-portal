@@ -5,6 +5,7 @@ var gulp = require('gulp'),
 	compass = require('gulp-compass'),
 	gulpif = require('gulp-if'),
 	uglify = require('gulp-uglify'),
+	minifyHTML = require('gulp-minify-html'),
 	tsProject = ts.createProject('tsconfig.json');
 
 var env,
@@ -14,7 +15,7 @@ var env,
 		sassStyle,
 		outputDir;
 
-env = process.env.NODE_ENV || 'development';
+env = process.env.NODE_ENV || 'production';
 
 if (env === 'development') {
 	outputDir = 'builds/development/';
@@ -41,7 +42,9 @@ gulp.task('connect', function () {
  * html (Reload index.html)
  */
 gulp.task('html', function () {
-  gulp.src(htmlSources)
+  gulp.src(['builds/development/*.html', 'builds/development/**/**/*.html'])
+		.pipe(gulpif(env === 'production', minifyHTML()))
+		.pipe(gulpif(env === 'production', gulp.dest(outputDir)))
     .pipe(connect.reload());
 });
 /**
@@ -74,11 +77,11 @@ gulp.task('sass', function () {
  * watch
  */
 gulp.task('watch', function () {
-  gulp.watch(htmlSources, ['html']);  // html files for livereload
-	gulp.watch(typescriptSources, ['typescript']); // typescript files for compilation
-	gulp.watch(sassSources, ['sass']); // sass files for compilation
+  gulp.watch(['builds/development/*.html', 'builds/development/**/**/*.html'], ['html']);
+	gulp.watch(typescriptSources, ['typescript']);
+	gulp.watch(sassSources, ['sass']);
 });
 /**
  * default
  */
-gulp.task('default', ['typescript', 'sass', 'connect', 'watch']);
+gulp.task('default', ['typescript', 'sass', 'html', 'connect', 'watch']);
