@@ -16,6 +16,9 @@
     },
     "angularjs/angular-mocks.d.ts": {
       "commit": "8f081073e6cb416f901b272810d8b04d6e01c9e0"
+    },
+    "node/node.d.ts": {
+      "commit": "71a7d5306ae4f9893aafd2d85d38aac8789ebf33"
     }
   }
 }

@@ -5,14 +5,33 @@ var gulp = require('gulp'),
 	compass = require('gulp-compass'),
 	tsProject = ts.createProject('tsconfig.json');
 
-var sassSources = ['components/sass/style.scss'];
+var env,
+		sassSources,
+		htmlSources,
+		typescriptSources,
+		sassStyle,
+		outputDir;
+
+env = process.env.NODE_ENV || 'development';
+
+if (env === 'development') {
+	outputDir = 'builds/development/';
+	sassStyle = 'expanded';
+} else {
+	outputDir = 'builds/production/';
+	sassStyle = 'compressed';	
+}
+
+sassSources = ['components/sass/**/*.scss'];
+htmlSources = [outputDir + '*.html',outputDir + 'views/**/*.html'];
+typescriptSources = ['components/typescript/**/**/*.ts'];
 
 /**
  * connect
  */
 gulp.task('connect', function () {
 	connect.server({
-		root: 'builds/development',
+		root: outputDir,
 		livereload: true
 	});
 });
@@ -20,7 +39,7 @@ gulp.task('connect', function () {
  * html (Reload index.html)
  */
 gulp.task('html', function () {
-  gulp.src('builds/development/*.html')
+  gulp.src(htmlSources)
     .pipe(connect.reload());
 });
 /**
@@ -29,7 +48,7 @@ gulp.task('html', function () {
 gulp.task('typescript', function () {
 	var tsResult = tsProject.src().pipe(ts(tsProject));
 	return tsResult.js
-						.pipe(gulp.dest('builds/development/js'))
+						.pipe(gulp.dest(outputDir + 'js'))
 						.pipe(connect.reload());
 });
 /**
@@ -38,13 +57,13 @@ gulp.task('typescript', function () {
 gulp.task('sass', function () {
   gulp.src(sassSources)
     .pipe(compass({
-			css: 'builds/development/css',
+			css: outputDir + 'css',
 			sass: 'components/sass',
-			image: 'builds/development/images',
-			style: 'expanded'
+			image: outputDir + 'images',
+			style: sassStyle
 		}))
 		.on('error', gutil.log)
-		.pipe(gulp.dest('builds/development/css'))
+		.pipe(gulp.dest(outputDir + 'css'))
 		.pipe(connect.reload());
 });
  
@@ -52,9 +71,9 @@ gulp.task('sass', function () {
  * watch
  */
 gulp.task('watch', function () {
-  gulp.watch(['builds/development/*.html', 'builds/development/views/**/*.html'], ['html']);  // html files for livereload
-	gulp.watch(['components/typescript/**/**/*.ts'], ['typescript']); // typescript files for compilation
-	gulp.watch(['components/sass/**/*.scss'], ['sass']); // sass files for compilation
+  gulp.watch(htmlSources, ['html']);  // html files for livereload
+	gulp.watch(typescriptSources, ['typescript']); // typescript files for compilation
+	gulp.watch(sassSources, ['sass']); // sass files for compilation
 });
 /**
  * default
