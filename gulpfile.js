@@ -25,9 +25,9 @@ gulp.task('html', function () {
     .pipe(connect.reload());
 });
 /**
- * scripts
+ * typescript
  */
-gulp.task('scripts', function () {
+gulp.task('typescript', function () {
 	var tsResult = tsProject.src().pipe(ts(tsProject));
 	return tsResult.js
 						.pipe(gulp.dest('builds/development/js'))
@@ -55,10 +55,10 @@ gulp.task('sass', function () {
  */
 gulp.task('watch', function () {
   gulp.watch(['builds/development/*.html', 'builds/development/views/**/*.html'], ['html']);  // html files for livereload
-	gulp.watch(['components/typescript/**/**/*.ts'], ['scripts']); // typescript files for compilation
+	gulp.watch(['components/typescript/**/**/*.ts'], ['typescript']); // typescript files for compilation
 	gulp.watch(['components/sass/style.scss'], ['sass']); // sass files for compilation
 });
 /**
  * default
  */
-gulp.task('default', ['scripts', 'sass', 'connect', 'watch']);
+gulp.task('default', ['typescript', 'sass', 'connect', 'watch']);
