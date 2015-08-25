@@ -3,6 +3,8 @@ var gulp = require('gulp'),
 	gutil = require('gulp-util'),
 	connect = require('gulp-connect'),
 	compass = require('gulp-compass'),
+	gulpif = require('gulp-if'),
+	uglify = require('gulp-uglify'),
 	tsProject = ts.createProject('tsconfig.json');
 
 var env,
@@ -48,7 +50,8 @@ gulp.task('html', function () {
 gulp.task('typescript', function () {
 	var tsResult = tsProject.src().pipe(ts(tsProject));
 	return tsResult.js
-						.pipe(gulp.dest(outputDir + 'js'))
+						.pipe(gulpif(env === 'production', uglify()))
+						.pipe(gulp.dest(outputDir + 'js'))						
 						.pipe(connect.reload());
 });
 /**
