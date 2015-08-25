@@ -1,5 +1,6 @@
 .sass-cache
 builds/development/js
+builds/development/css
 
 # Ignore Visual Studio  Project #
 ###################

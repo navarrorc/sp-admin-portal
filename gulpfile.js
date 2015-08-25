@@ -20,7 +20,8 @@ gulp.task('connect', function () {
  * html (Reload index.html)
  */
 gulp.task('html', function () {
-  gulp.src('builds/development/*.html')
+  gulp
+		.src('builds/development/*.html')
     .pipe(connect.reload());
 });
 /**
@@ -28,13 +29,16 @@ gulp.task('html', function () {
  */
 gulp.task('scripts', function () {
 	var tsResult = tsProject.src().pipe(ts(tsProject));
-	return tsResult.js.pipe(gulp.dest('builds/development/js'));
+	return tsResult.js
+						.pipe(gulp.dest('builds/development/js'))
+						.pipe(connect.reload());
 });
 /**
  * sass
  */
 gulp.task('sass', function () {
-  gulp.src(sassSources)
+  gulp
+		.src(sassSources)
     .pipe(compass({
 			css: 'builds/development/css',
 			sass: 'components/sass',
@@ -42,7 +46,8 @@ gulp.task('sass', function () {
 			style: 'expanded'
 		}))
 		.on('error', gutil.log)
-		.pipe(gulp.dest('builds/development/css'));
+		.pipe(gulp.dest('builds/development/css'))
+		.pipe(connect.reload());
 });
  
 /**
@@ -50,8 +55,8 @@ gulp.task('sass', function () {
  */
 gulp.task('watch', function () {
   gulp.watch(['builds/development/*.html', 'builds/development/views/**/*.html'], ['html']);  // html files for livereload
-	gulp.watch(['components/typescript/**/**/*.ts'], ['scripts','html']); // typescript files for compilation
-	gulp.watch(['components/sass/style.scss'], ['sass', 'html']); // sass files for compilation
+	gulp.watch(['components/typescript/**/**/*.ts'], ['scripts']); // typescript files for compilation
+	gulp.watch(['components/sass/style.scss'], ['sass']); // sass files for compilation
 });
 /**
  * default
