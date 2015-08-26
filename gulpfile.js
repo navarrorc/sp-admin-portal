@@ -30,7 +30,7 @@ if (env === 'development') {
 
 sassSources = ['components/sass/**/*.scss'];
 htmlSources = [outputDir + '*.html', outputDir + 'views/**/*.html'];
-typescriptSources = ['components/typescript/**/**/*.ts',];
+typescriptSources = ['components/typescript/**/**/*.ts', ];
 
 /**
  * connect
@@ -59,7 +59,7 @@ function tsc(src, dest, out) {
     .pipe(ts({
       noImplicitAny: true,
       target: 'es5',
-      declarationFiles: true,
+      declarationFiles: false,
       out: out,
       noExternalResolve: false
     }));
@@ -74,7 +74,6 @@ function tsc(src, dest, out) {
   return merge([js, dts]);
 }
 gulp.task('typescript', function () {
-
 	return tsc(typescriptSources, outputDir + 'js', 'tsoutput.js')
     .pipe(debug({ title: 'scripts:' }))
 		.pipe(connect.reload());
