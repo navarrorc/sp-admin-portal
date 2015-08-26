@@ -7,7 +7,9 @@ var gulp = require('gulp'),
 	uglify = require('gulp-uglify'),
 	minifyHTML = require('gulp-minify-html'),
 	sourcemaps = require('gulp-sourcemaps'),
-	tsProject = ts.createProject('tsconfig.json');
+	merge = require('merge2'),
+	debug = require('gulp-debug'),
+	tsProject = ts.createProject('tsconfig.json', { sortOutput: true });
 
 var env,
 		sassSources,
@@ -28,7 +30,7 @@ if (env === 'development') {
 
 sassSources = ['components/sass/**/*.scss'];
 htmlSources = [outputDir + '*.html', outputDir + 'views/**/*.html'];
-typescriptSources = ['components/typescript/**/**/*.ts'];
+typescriptSources = ['components/typescript/**/**/*.ts',];
 
 /**
  * connect
@@ -51,16 +53,30 @@ gulp.task('html', function () {
 /**
  * typescript
  */
-gulp.task('typescript', function () {
-	var tsResult = tsProject.src()
-		.pipe(sourcemaps.init())
-		.pipe(ts(tsProject));
+function tsc(src, dest, out) {
+  var tsResult = gulp.src(src)
+    .pipe(sourcemaps.init())
+    .pipe(ts({
+      noImplicitAny: true,
+      target: 'es5',
+      declarationFiles: true,
+      out: out,
+      noExternalResolve: false
+    }));
 
-	//tsResult.dts.pipe(gulp.dest(outputDir + 'js'));
-	return tsResult.js
-		.pipe(gulpif(env === 'production', uglify()))	
-		.pipe(sourcemaps.write('.'))		
-		.pipe(gulp.dest(outputDir + 'js'))
+  var js = tsResult.js
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest(dest));
+
+  var dts = tsResult.dts
+    .pipe(gulp.dest(dest));
+
+  return merge([js, dts]);
+}
+gulp.task('typescript', function () {
+
+	return tsc(typescriptSources, outputDir + 'js', 'tsoutput.js')
+    .pipe(debug({ title: 'scripts:' }))
 		.pipe(connect.reload());
 });
 /**
