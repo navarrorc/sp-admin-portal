@@ -6,6 +6,7 @@ var gulp = require('gulp'),
 	gulpif = require('gulp-if'),
 	uglify = require('gulp-uglify'),
 	minifyHTML = require('gulp-minify-html'),
+	sourcemaps = require('gulp-sourcemaps'),
 	tsProject = ts.createProject('tsconfig.json');
 
 var env,
@@ -22,11 +23,11 @@ if (env === 'development') {
 	sassStyle = 'expanded';
 } else {
 	outputDir = 'builds/production/';
-	sassStyle = 'compressed';	
+	sassStyle = 'compressed';
 }
 
 sassSources = ['components/sass/**/*.scss'];
-htmlSources = [outputDir + '*.html',outputDir + 'views/**/*.html'];
+htmlSources = [outputDir + '*.html', outputDir + 'views/**/*.html'];
 typescriptSources = ['components/typescript/**/**/*.ts'];
 
 /**
@@ -51,11 +52,16 @@ gulp.task('html', function () {
  * typescript
  */
 gulp.task('typescript', function () {
-	var tsResult = tsProject.src().pipe(ts(tsProject));
+	var tsResult = tsProject.src()
+		.pipe(sourcemaps.init())
+		.pipe(ts(tsProject));
+
+	//tsResult.dts.pipe(gulp.dest(outputDir + 'js'));
 	return tsResult.js
-						.pipe(gulpif(env === 'production', uglify()))
-						.pipe(gulp.dest(outputDir + 'js'))						
-						.pipe(connect.reload());
+		.pipe(gulpif(env === 'production', uglify()))	
+		.pipe(sourcemaps.write('.'))		
+		.pipe(gulp.dest(outputDir + 'js'))
+		.pipe(connect.reload());
 });
 /**
  * sass

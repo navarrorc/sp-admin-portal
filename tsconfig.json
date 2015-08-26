@@ -6,8 +6,7 @@
 			"removeComments": true,
 			"preserveConstEnums": true,
 			"declaration": true,
-			"out": "tsoutput.js",
-			"sourceMap": false
+			"out": "tsoutput.js"
 		},
 		"formatCodeOptions": {
 			"indentSize": 2,
@@ -15,10 +14,13 @@
 		},
 		"files": [
 			"components/typescript/app.ts",
+			
 			"components/typescript/products/product.ts",
+			
 			"components/typescript/common/services/common.services.ts",
 			"components/typescript/common/services/dataAccessService.ts",
 			"components/typescript/common/services/productResourceMock.ts",
+			
 			"components/typescript/products/productListCtrl.ts"
 		]
 	}
