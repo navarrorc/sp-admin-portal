@@ -22,6 +22,12 @@
     },
     "angularjs/angular-route.d.ts": {
       "commit": "fa8d9683f37d07ed79617a6e037916c6718aeb11"
+    },
+    "microsoft-ajax/microsoft.ajax.d.ts": {
+      "commit": "fa8d9683f37d07ed79617a6e037916c6718aeb11"
+    },
+    "sharepoint/SharePoint.d.ts": {
+      "commit": "fa8d9683f37d07ed79617a6e037916c6718aeb11"
     }
   }
 }

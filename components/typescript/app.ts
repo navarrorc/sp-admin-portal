@@ -2,6 +2,7 @@
 /// <reference path="./../../typings/angularjs/angular-resource.d.ts" />
 /// <reference path="./../../typings/angularjs/angular-mocks.d.ts" />
 /// <reference path="./../../typings/angularjs/angular-route.d.ts" />
+/// <reference path="./../../typings/sharepoint/SharePoint.d.ts" />
 module app {
 	var main = angular.module("productManagement",
 		["ngRoute",

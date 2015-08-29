@@ -1,0 +1,2 @@
+This is where your ssl certificates will go. Currently using a .pfx (Personal Information Exchange) file.
+See http://www.jayway.com/2014/09/03/creating-self-signed-certificates-with-makecert-exe-for-development/

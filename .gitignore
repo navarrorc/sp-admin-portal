@@ -2,6 +2,7 @@
 builds/development/js
 builds/development/css
 builds/production
+ssl/*.pfx
 
 # Ignore Visual Studio  Project #
 ###################

@@ -2,6 +2,7 @@ var gulp = require('gulp'),
 	ts = require('gulp-typescript'),
 	gutil = require('gulp-util'),
 	connect = require('gulp-connect'),
+	webserver = require('gulp-webserver'),
 	compass = require('gulp-compass'),
 	gulpif = require('gulp-if'),
 	uglify = require('gulp-uglify'),
@@ -36,10 +37,19 @@ typescriptSources = ['components/typescript/**/**/*.ts', ];
  * connect
  */
 gulp.task('connect', function () {
-	connect.server({
-		root: outputDir,
-		livereload: true
-	});
+	// connect.server({
+	// 	root: outputDir,
+	// 	https: true,
+	// 	livereload: true
+	// });
+	gulp.src(outputDir)
+		.pipe(webserver({
+			port: 8080,
+			https: {pfx: 'ssl/ServerSSL.pfx', passphrase: 'Test123'},
+			livereload: true,
+			directoryListing: false,
+			open: false			
+		}));
 });
 /**
  * html (Reload index.html)
