@@ -5,11 +5,11 @@
 	"configurations": [
 		{
 			// Name of configuration; appears in the launch configuration drop down menu.
-			"name": "node gulp.js ..",
+			"name": "Launch gulp.js",
 			// Type of configuration. Possible values: "node", "mono".
 			"type": "node",
 			// Workspace relative or absolute path to the program.
-			"program": "./node_modules/gulp/bin/gulp.js",
+			"program": "node_modules/gulp/bin/gulp.js",
 			// Automatically stop program after launch.
 			"stopOnEntry": true,
 			// Command line arguments passed to the program.
@@ -33,7 +33,7 @@
 			// TCP/IP address. Default is "localhost".
 			"address": "localhost",
 			// Port to attach to.
-			"port": 5858,
+			"port": 8080,
 			"sourceMaps": false
 		}
 	]

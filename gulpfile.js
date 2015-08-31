@@ -1,7 +1,6 @@
 var gulp = require('gulp'),
 	ts = require('gulp-typescript'),
 	gutil = require('gulp-util'),
-	connect = require('gulp-connect'),
 	webserver = require('gulp-webserver'),
 	compass = require('gulp-compass'),
 	gulpif = require('gulp-if'),
@@ -57,8 +56,7 @@ gulp.task('connect', function () {
 gulp.task('html', function () {
   gulp.src(['builds/development/*.html', 'builds/development/**/**/*.html'])
 		.pipe(gulpif(env === 'production', minifyHTML()))
-		.pipe(gulpif(env === 'production', gulp.dest(outputDir)))
-    .pipe(connect.reload());
+		.pipe(gulpif(env === 'production', gulp.dest(outputDir)));
 });
 /**
  * typescript
@@ -85,8 +83,7 @@ function tsc(src, dest, out) {
 }
 gulp.task('typescript', function () {
 	return tsc(typescriptSources, outputDir + 'js', 'tsoutput.js')
-    .pipe(debug({ title: 'scripts:' }))
-		.pipe(connect.reload());
+    .pipe(debug({ title: 'scripts:' }));
 });
 /**
  * sass
@@ -100,8 +97,7 @@ gulp.task('sass', function () {
 			style: sassStyle
 		}))
 		.on('error', gutil.log)
-		.pipe(gulp.dest(outputDir + 'css'))
-		.pipe(connect.reload());
+		.pipe(gulp.dest(outputDir + 'css'));
 });
  
 /**

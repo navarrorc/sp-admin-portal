@@ -5,6 +5,130 @@ module app.productList {
     products: app.domain.IProduct[];
     toggleImage(): void;
   }
+  
+  /**
+   * JSOM 
+   */
+  var web: SP.Web,
+    hostweburl: string,
+    appweburl: string;
+
+
+  function printAllListNamesFromHostWeb() {
+    var context: SP.ClientContext;
+    var factory: SP.ProxyWebRequestExecutorFactory;
+    var appContextSite: SP.AppContextSite;
+    var configList: SP.List;
+    var collListItems: SP.ListItemCollection;
+    var user: SP.User;
+    
+    SP.SOD.executeOrDelayUntilScriptLoaded(() => {
+      context = new SP.ClientContext(appweburl);
+      factory = new SP.ProxyWebRequestExecutorFactory(appweburl);
+      context.set_webRequestExecutorFactory(factory);
+      appContextSite = new SP.AppContextSite(context, appweburl);
+  
+  
+      // trying out SP.UserProfiles.js
+      var peopleManager = new SP.UserProfiles.PeopleManager(context);
+      var personProperties = peopleManager.getMyProperties();
+      ////////////////////////////////
+  
+      web = appContextSite.get_web();
+      user = web.get_currentUser();
+      configList = web.get_lists().getByTitle('Configuration Values');
+      var camlQuery = new SP.CamlQuery();
+      collListItems = configList.getItems(camlQuery);
+      context.load(personProperties);
+      context.load(user);
+      context.load(collListItems, "Include(Title, Value)");
+      context.executeQueryAsync(onGetConfigValuesSuccess, onGetConfigValuesFail);
+  
+      function onGetConfigValuesSuccess() {
+        var OrgName: string;
+        var listItemEnumerator = collListItems.getEnumerator();
+  
+        while (listItemEnumerator.moveNext()) {
+          var oListItem = listItemEnumerator.get_current();
+          try {
+            var current = oListItem.get_item('Title');
+          } catch (error) {
+            console.log("Something went Wrong!", error);
+            alert("Something went Wrong! "+ error);
+          }
+  
+          switch (current) {
+            case 'OrganizationName':
+              try {
+                OrgName = oListItem.get_item('Value');
+              } catch (error) {
+                console.log("Something went wrong!",error);
+                alert("Something went wrong! "+error);
+              }           
+              break;
+            default:
+              break;
+          }
+        }
+        
+        //User Profiles output
+        //var properties = personProperties.get_userProfileProperties();
+        var messageText = "";
+        // for (var key in properties){
+        //   messageText += "<br/>[" + key + "]: \"" + properties[key] + "\"";
+        // }
+        ////////////////
+        
+        
+        if (OrgName && OrgName.length > 0) {
+          document.getElementById("message").innerHTML = messageText +"<br/><div style='text-align: center; color: black;'>Current user: " + user.get_title() +"<br/><strong>Organization Name: " + OrgName.toUpperCase() + "</strong></div><br/>";
+        }
+      }
+  
+      function onGetConfigValuesFail(sender: any, args: any) {
+        alert('Failed to get Configuration Values. Error:' + args.get_message());
+      }
+    }, 'sp.userprofiles.js');
+
+  }
+
+  function getQueryStringParameter(param: string) {
+    var params = document.URL.split("?")[1].split("&");
+    var strParams = "";
+    for (var i = 0; i < params.length; i = i + 1) {
+      var singleParam = params[i].split("=");
+      if (singleParam[0] == param) {
+        return singleParam[1];
+      }
+    }
+  }
+
+  function sharePointReady() {
+    hostweburl =
+    decodeURIComponent(
+      getQueryStringParameter('SPHostUrl')
+      );
+    appweburl =
+    decodeURIComponent(
+      getQueryStringParameter('SPAppWebUrl')
+      );
+
+    var scriptbase = hostweburl + '/_layouts/15/';
+
+    $.getScript(scriptbase + 'init.js',
+      function() {$.getScript(scriptbase + 'sp.core.js',      
+        function() { $.getScript(scriptbase + 'SP.Runtime.js',
+          function() { $.getScript(scriptbase + 'SP.js',
+              function() { $.getScript(scriptbase + 'SP.UserProfiles.js',
+                  function(){$.getScript(scriptbase + 'SP.RequestExecutor.js', printAllListNamesFromHostWeb);}
+               );}
+           );}
+        );}
+      );} 
+   );
+   
+  }
+
 
   class ProductListCtrl implements IProductListModel {
     title: string;
@@ -23,113 +147,16 @@ module app.productList {
       });
       
       /***
-       * Testing CSOM code
+       * Testing JSOM code
        */
-      $(document).ready(function() {
-       //loadRequiredSharePointLibraries();
-      })
+      sharePointReady();
     }
 
     toggleImage(): void {
       this.showImage = !this.showImage;
     }
-
   }
 
-  var hostweburl: string;
-  var appweburl: string;
-
-  function getQueryStringParameter(param: string) {
-    
-    console.log("document URL", document.URL);
-    var params = document.URL.split("?")[1].split("&");
-    var strParams = "";
-    for (var i = 0; i < params.length; i = i + 1) {
-      var singleParam = params[i].split("=");
-      if (singleParam[0] == param) {
-        return singleParam[1];
-      }
-    }
-  }
-
-  function loadRequiredSharePointLibraries() {
-    // Load the required SharePoint libraries
-    $(document).ready(function() {
-      //Get the URI decoded URLs.
-      //hostweburl = "https://rushenterprises.sharepoint.com/sites/dev";
-      hostweburl = decodeURIComponent(
-            getQueryStringParameter('SPHostUrl'));
-      //addinweburl = "https://rushenterprises-843e46c9474926.sharepoint.com/sites/dev/Sharepoint-JsAppSandbox";
-      //addinweburl = "https://localhost:8080";
-      appweburl =  decodeURIComponent(
-           getQueryStringParameter('SPAppWebUrl'));
-      
-      // resources are in URLs in the form:
-      // web_url/_layouts/15/resource
-      var scriptbase = hostweburl + "/_layouts/15/";
-
-      // Load the js files and continue to the successHandler
-      $.getScript(scriptbase + "SP.Runtime.js",
-        function() {
-          $.getScript(scriptbase + "SP.js",
-            function() { 
-              // $.getScript(scriptbase + "init.js",
-              //   function() { 
-              // $.getScript(scriptbase + "SP.UserProfiles.js", 
-              //   function() {
-              $.getScript(scriptbase + "SP.RequestExecutor.js", execCrossDomainRequest)
-            }); 
-          //  })
-          //});
-        }
-        );
-    });
-  }
-
-  function execCrossDomainRequest() {
-    var messageText = "Hello World!";    
-    
-    // context: The ClientContext object provides access to
-    //          the web and lists objects.
-    // factory: Initialize the factory object with the app web URL
-    // var context = new SP.ClientContext(appweburl);
-    // var factory = new SP.ProxyWebRequestExecutorFactory(appweburl);
-    // context.set_webRequestExecutorFactory(factory); 
-
-    // var context = SP.ClientContext.get_current();
-    // var user = context.get_web().get_currentUser();
-    // context.load(user);
-    // context.executeQueryAsync(function() {
-    //   console.log("welcome: ", user.get_title());
-    // }, function(sender, args) {
-    //   console.log(args);
-    // });
-    // var peopleManager = new SP.UserProfiles.PeopleManager(context);
-    // var personProperties = peopleManager.getMyProperties();
-    // context.load(personProperties);
-    // context.executeQueryAsync(function(sender, args) {
-    //   var properties = personProperties.get_userProfileProperties();
-    //   for (var key in properties) {
-    //     messageText += "<br />[" + key + "]: \"" + properties[key] + "\"";
-    //   }
-    //   //$get("results").innerHTML = messageText;
-    // }, function(sender, args) { alert('Error: ' + args.get_message()); });
-    
-    // SP.SOD.executeOrDelayUntilScriptLoaded(function() {
-    //   var context = SP.ClientContext.get_current();
-    //   var peopleManager = new SP.UserProfiles.PeopleManager(context);
-    //   var personProperties = peopleManager.getMyProperties();
-    //   context.load(personProperties);
-    //   context.executeQueryAsync(function(sender, args) {
-    //     var properties = personProperties.get_userProfileProperties();
-    //     for (var key in properties) {
-    //       messageText += "<br />[" + key + "]: \"" + properties[key] + "\"";
-    //     }
-    //     //$get("results").innerHTML = messageText;
-    //   }, function(sender, args) { alert('Error: ' + args.get_message()); });
-    // }, 'sp.userprofiles.js')
-    console.log(messageText);
-  }
 
   angular
     .module("productManagement")

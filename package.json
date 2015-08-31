@@ -2,7 +2,7 @@
   "name": "sandbox",
   "version": "0.0.1",
   "description": "",
-  "main": "gulpfile.js",
+  "main": "builds/development/js/tsoutput.js",
   "dependencies": {},
   "devDependencies": {
     "gulp": "^3.9.0",
