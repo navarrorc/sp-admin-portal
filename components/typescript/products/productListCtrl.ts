@@ -30,59 +30,59 @@ module app.productList {
   
   
       // trying out SP.UserProfiles.js
-      var peopleManager = new SP.UserProfiles.PeopleManager(context);
-      var personProperties = peopleManager.getMyProperties();
+      //var peopleManager = new SP.UserProfiles.PeopleManager(context);
+      //var personProperties = peopleManager.getMyProperties();
       ////////////////////////////////
   
       web = appContextSite.get_web();
       user = web.get_currentUser();
-      configList = web.get_lists().getByTitle('Configuration Values');
-      var camlQuery = new SP.CamlQuery();
-      collListItems = configList.getItems(camlQuery);
-      context.load(personProperties);
+      //configList = web.get_lists().getByTitle('Configuration Values');
+      //var camlQuery = new SP.CamlQuery();
+      //collListItems = configList.getItems(camlQuery);
+      //context.load(personProperties);
       context.load(user);
-      context.load(collListItems, "Include(Title, Value)");
+      //context.load(collListItems, "Include(Title, Value)");
       context.executeQueryAsync(onGetConfigValuesSuccess, onGetConfigValuesFail);
   
       function onGetConfigValuesSuccess() {
-        var OrgName: string;
-        var listItemEnumerator = collListItems.getEnumerator();
+        // var OrgName: string;
+        // var listItemEnumerator = collListItems.getEnumerator();
   
-        while (listItemEnumerator.moveNext()) {
-          var oListItem = listItemEnumerator.get_current();
-          try {
-            var current = oListItem.get_item('Title');
-          } catch (error) {
-            console.log("Something went Wrong!", error);
-            alert("Something went Wrong! "+ error);
-          }
+        // while (listItemEnumerator.moveNext()) {
+        //   var oListItem = listItemEnumerator.get_current();
+        //   try {
+        //     var current = oListItem.get_item('Title');
+        //   } catch (error) {
+        //     console.log("Something went Wrong!", error);
+        //     alert("Something went Wrong! "+ error);
+        //   }
   
-          switch (current) {
-            case 'OrganizationName':
-              try {
-                OrgName = oListItem.get_item('Value');
-              } catch (error) {
-                console.log("Something went wrong!",error);
-                alert("Something went wrong! "+error);
-              }           
-              break;
-            default:
-              break;
-          }
-        }
+        //   switch (current) {
+        //     case 'OrganizationName':
+        //       try {
+        //         OrgName = oListItem.get_item('Value');
+        //       } catch (error) {
+        //         console.log("Something went wrong!",error);
+        //         alert("Something went wrong! "+error);
+        //       }           
+        //       break;
+        //     default:
+        //       break;
+        //   }
+        // }
         
         //User Profiles output
         //var properties = personProperties.get_userProfileProperties();
-        var messageText = "";
+        //var messageText = "";
         // for (var key in properties){
         //   messageText += "<br/>[" + key + "]: \"" + properties[key] + "\"";
         // }
         ////////////////
         
         
-        if (OrgName && OrgName.length > 0) {
-          document.getElementById("message").innerHTML = messageText +"<br/><div style='text-align: center; color: black;'>Current user: " + user.get_title() +"<br/><strong>Organization Name: " + OrgName.toUpperCase() + "</strong></div><br/>";
-        }
+        //if (OrgName && OrgName.length > 0) {
+          document.getElementById("message").innerHTML = "<br/><div style='text-align: center; color: black;'>Current user: " + user.get_title() +"<br/></div><br/>";
+        //}
       }
   
       function onGetConfigValuesFail(sender: any, args: any) {

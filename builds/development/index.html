@@ -8,22 +8,71 @@
   <script src="scripts/jquery-1.11.3.min.js"></script>
 
   <!-- Style sheets -->
-  <link href="css/bootstrap.css" rel="stylesheet" />
+  <!--<link href="css/bootstrap.css" rel="stylesheet" />-->
+  <link href="css/dashicons.css" rel="stylesheet" />  
+  <!--<link href="css/wp-style.css" rel="stylesheet" />  -->
   <link href="css/style.css" rel="stylesheet" />
 </head>
 
-<body ng-app="productManagement">
-  <nav class="navbar navbar-default">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <div class="navbar-brand">Admin Panel</div>
+<body ng-app="productManagement" class="auto-fold">
+
+  <div class="adminbar">
+    <div class="quicklinks" id="wp-toolbar" role="navigation" tabindex="0">
+      <ul id="wp-admin-bar-top-secondary" class="ab-top-secondary ab-top-menu">
+        <li id="wp-admin-bar-my-account" class="menupop with-avatar">
+          <a class="ab-item" href="#">
+            Howdy, Robert
+            <img src="http://1.gravatar.com/avatar/1e8ec01c085a2a9123b088333d849bb9?s=26&d=mm&r=g" class="avatar avatar-26 photo"
+            height="26" width="26" alt="">
+          </a>
+          
+          
+        </li>
+      </ul>  
+    </div>    
+  </div>
+  <div class="adminmenuback">
+    <div class="adminmenuback-adminmenuwrap">
+      <ul class="adminmenuback-adminmenuwrap-adminmenu">
+        <li class="menu-top wp-has-current-submenu" id="menu-dashboard"><a href="#" class="menu-top wp-has-current-submenu"><div class="wp-menu-image dashicons-before dashicons-dashboard"></div><div class="wp-menu-name">Dashboard</div></a>
+          <ul class="wp-submenu wp-submenu-wrap">
+            <li class="wp-submenu-head" aria-hidden="true">Dashboard</li>
+            <li class="wp-first-item current"><a href="#" class="wp-first-item current">Home</a></li>
+            <li><a href="#">Updates <span class="update-plugins count-0" title=""><span style="display:none" class="update-count">0</span></span></a></li>
+          </ul>  
+        </li>          
+        <li class="menu-top"><a href="#"><div class="menu-top wp-menu-image dashicons-before dashicons-admin-post"></div><div class="wp-menu-name">Posts</div></a></li>
+        <li class="menu-top"><a href="#"><div class="menu-top wp-menu-image dashicons-before dashicons-admin-media"></div><div class="wp-menu-name">Media</div></a></li>
+        <li class="menu-top"><a href="#"><div class="menu-top wp-menu-image dashicons-before dashicons-admin-page"></div><div class="wp-menu-name">Comments</div></a></li>
+        <li class="wp-menu-separator" aria-hidden="true"><div class="separator"></div></li>
+        <li class="menu-top"><a href="#"><div class="menu-top wp-menu-image dashicons-before dashicons-admin-tools"></div><div class="wp-menu-name">Tools</div> </a></li>
+        <li class="menu-top"><a href="#"><div class="menu-top wp-menu-image dashicons-before dashicons-admin-settings"></div><div class="wp-menu-name">Settings</div> </a></li>
+        <li class="collapse-menu" onclick="document.getElementsByClassName('adminmenuback')[0].classList.toggle('collapsed');document.getElementsByClassName('adminmenuback-adminmenuwrap')[0].classList.toggle('collapsed');document.getElementsByClassName('wp-submenu-wrap')[0].classList.toggle('collapsed');document.getElementsByClassName('wrap-content')[0].classList.toggle('folded')"><div class="collapse-button"><div></div></div><span>Collapse menu</span></li>
+      </ul>
+    </div>
+    <!--adminmenuBack-->
+  </div>
+  <div class="wrap">
+    <div class="wrap-content">
+      <div class="wrap-content-body">
+        <h1>Dashboard</h1>
+        <div id="wecome-panel" class="welcome-panel">
+          <div class="welcome-panel-content">
+            <h3>Welcome to Lorem Ipsum!</h3>
+          </div>
+        </div>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. In possimus expedita vero nisi odio quos aspernatur blanditiis! Quisquam nam doloremque, eius. Quod aspernatur cum minus alias cupiditate. Totam, esse, magnam.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. In possimus expedita vero nisi odio quos aspernatur blanditiis! Quisquam nam doloremque, eius. Quod aspernatur cum minus alias cupiditate. Totam, esse, magnam.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. In possimus expedita vero nisi odio quos aspernatur blanditiis! Quisquam nam doloremque, eius. Quod aspernatur cum minus alias cupiditate. Totam, esse, magnam.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. In possimus expedita vero nisi odio quos aspernatur blanditiis! Quisquam nam doloremque, eius. Quod aspernatur cum minus alias cupiditate. Totam, esse, magnam.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. In possimus expedita vero nisi odio quos aspernatur blanditiis! Quisquam nam doloremque, eius. Quod aspernatur cum minus alias cupiditate. Totam, esse, magnam.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. In possimus expedita vero nisi odio quos aspernatur blanditiis! Quisquam nam doloremque, eius. Quod aspernatur cum minus alias cupiditate. Totam, esse, magnam.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. In possimus expedita vero nisi odio quos aspernatur blanditiis! Quisquam nam doloremque, eius. Quod aspernatur cum minus alias cupiditate. Totam, esse, magnam.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. In possimus expedita vero nisi odio quos aspernatur blanditiis! Quisquam nam doloremque, eius. Quod aspernatur cum minus alias cupiditate. Totam, esse, magnam.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. In possimus expedita vero nisi odio quos aspernatur blanditiis! Quisquam nam doloremque, eius. Quod aspernatur cum minus alias cupiditate. Totam, esse, magnam.</p>
       </div>
     </div>
-  </nav>
-
-  <div class="container">
-    <div id="message"></div>
-    <ng-view></ng-view>
+    
   </div>
 
   <!-- Library Scripts -->
