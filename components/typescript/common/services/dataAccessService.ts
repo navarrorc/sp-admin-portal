@@ -2,7 +2,7 @@ module app.common {
 	var web: SP.Web,
 		hostweburl: string,
 		appweburl: string,
-		username: string;
+		user: SP.User;
 	
 	function getQueryStringParameter(param: string) {
 		var params = document.URL.split("?")[1].split("&");
@@ -15,73 +15,69 @@ module app.common {
 		}
 	}
 	
-	function getSPName() {
-		var context: SP.ClientContext,
-			factory: SP.ProxyWebRequestExecutorFactory,
-			appContextSite: SP.AppContextSite,
-			user: SP.User;			
+	function getSPName(): JQueryPromise<{}> {		
+			var context: SP.ClientContext,
+				factory: SP.ProxyWebRequestExecutorFactory,
+				appContextSite: SP.AppContextSite;
+				
+			var deferred = $.Deferred();
+			myPromise: $.Deferred();
+							
+			context = new SP.ClientContext(appweburl);
+			factory = new SP.ProxyWebRequestExecutorFactory(appweburl);
+			context.set_webRequestExecutorFactory(factory);
+			appContextSite = new SP.AppContextSite(context, appweburl);
+
+			web = appContextSite.get_web();
+			user = web.get_currentUser();
+
+			context.load(user);
+			context.executeQueryAsync(
+				function () {
+					//console.log("before dfd.resolve(user) username is", user.get_title());
+					deferred.resolve(user);
+				}, 
+				function(sender:any, args:any) {
+					//console.log("Something Wrong Happened!", args);
+					deferred.reject(sender, args);					
+				}
+			);
 			
-		context = new SP.ClientContext(appweburl);
-		factory = new SP.ProxyWebRequestExecutorFactory(appweburl);
-		context.set_webRequestExecutorFactory(factory);
-		appContextSite = new SP.AppContextSite(context, appweburl);
-		
-		web = appContextSite.get_web();
-		user = web.get_currentUser();		
-		
-		context.load(user);
-		context.executeQueryAsync(onGetNameSuccess, onGetNameFailed);		
-		
-		function onGetNameSuccess() {
-			username = user.get_title();
-			console.log("username: ", username);
-			//alert(username);
-			$("#username").html("Howdy, " + username);
-			
-		}
-		
-		function onGetNameFailed(sender: any, args: any) {
-			alert('Something went Wrong! ' + args.get_message());
-		}		
+			return deferred.promise();	
 	}
 	
+	
+	
 	function sharePointReady() {
-     hostweburl =
-     decodeURIComponent(
-       getQueryStringParameter('SPHostUrl')
-       );
-     appweburl =
-     decodeURIComponent(
-       getQueryStringParameter('SPAppWebUrl')
-       );
-
+     hostweburl = decodeURIComponent(getQueryStringParameter('SPHostUrl'));
+     appweburl = decodeURIComponent(getQueryStringParameter('SPAppWebUrl'));		 
      var scriptbase = hostweburl + '/_layouts/15/';
-
-     $.getScript(scriptbase + 'init.js',
-       function() {$.getScript(scriptbase + 'sp.core.js',      
-         function() { $.getScript(scriptbase + 'SP.Runtime.js',
-           function() { $.getScript(scriptbase + 'SP.js',
-               function() { $.getScript(scriptbase + 'SP.UserProfiles.js',
-                   function(){$.getScript(scriptbase + 'SP.RequestExecutor.js', getSPName);}
-                );}
-            );}
-         );}
-       );} 
-    ); 
-		
-		//return username;
+		 
+		 return $.when(
+			 $.getScript(scriptbase + 'init.js'),
+			 $.getScript(scriptbase + 'sp.core.js'),
+			 $.getScript(scriptbase + 'SP.Runtime.js'),
+			 $.getScript(scriptbase + 'SP.js'),
+			 $.getScript(scriptbase + 'SP.RequestExecutor.js'),
+			 $.Deferred(function(deferred){
+				 $(deferred.resolve);
+			 })
+			 
+		 ).then(getSPName);
    }
 	 
 	export class DataAccessService {
 
 		constructor() {
-			sharePointReady();
+			//sharePointReady();
 		}
 
-		getName(): string {			
-			//return "Robertooo";
-			//sharePointReady();
-			return username;
+		getName() {			
+			return sharePointReady();
+			// myPromise.then(function(user:SP.User){
+			// 	console.info("SP.User username is: ", user.get_title());
+			// })
+			//return "Bob";
 		}
 	}
 	

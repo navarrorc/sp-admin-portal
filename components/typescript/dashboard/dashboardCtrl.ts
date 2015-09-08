@@ -4,9 +4,13 @@ module app.dashboard {
     
 		static $inject = ["dataAccessService"];
     constructor(private dataAccessService: app.common.DataAccessService) {
-      // this.name = "";
+      // var vm = this;
 
-      // this.name = dataAccessService.getName();
+      // dataAccessService.getName().then(function(user:SP.User) {
+			// 	console.log("before vm.name", vm.name);
+				
+			// 	vm.name = user.get_title();
+			// });
     }
 	}
 	
