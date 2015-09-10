@@ -21,10 +21,10 @@
     <div class="quicklinks" id="wp-toolbar" role="navigation" tabindex="0">
       <ul id="wp-admin-bar-top-secondary" class="ab-top-secondary ab-top-menu">
         <li id="wp-admin-bar-my-account" class="menupop with-avatar">
-          <a class="ab-item" href="#">
+          <a class="ab-item" href="">
             <!--<span id="username">Greetings!</span>-->
-            Howdy!, {{vm.name}}
-            <img src="http://1.gravatar.com/avatar/1e8ec01c085a2a9123b088333d849bb9?s=26&d=mm&r=g" class="avatar avatar-26 photo"
+            Howdy, <span data-ng-bind="vm.name"></span>
+            <img ng-src="{{vm.pictureUrl}}" class="avatar avatar-26 photo"
             height="26" width="26" alt="">
           </a>        
         </li>
@@ -61,7 +61,9 @@
   <div class="wrap">
     <div class="wrap-content">
       <div class="wrap-content-body">
-        <ng-view></ng-view>
+        <div class="container-fluid">
+          <ng-view></ng-view>
+        </div>        
     </div>
     
   </div>
@@ -74,6 +76,11 @@
 
   <!--SharePoint-->
   <script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/4.0/1/MicrosoftAjax.js"></script>
+  <script type="text/javascript" src="https://rushenterprises.sharepoint.com/sites/dev/_layouts/15/init.js"></script>
+  <script type="text/javascript" src="https://rushenterprises.sharepoint.com/sites/dev/_layouts/15/sp.runtime.js"></script>
+  <script type="text/javascript" src="https://rushenterprises.sharepoint.com/sites/dev/_layouts/15/sp.js"></script>
+  <script type="text/javascript" src="https://rushenterprises.sharepoint.com/sites/dev/_layouts/15/sp.taxonomy.js"></script>
+  <script type="text/javascript" src="https://rushenterprises.sharepoint.com/sites/dev/_layouts/15/sp.userprofiles.js"></script>
 
   <!-- Application Script -->
   <script src="js/tsoutput.js"></script>

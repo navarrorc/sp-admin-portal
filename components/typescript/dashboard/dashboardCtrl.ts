@@ -2,8 +2,8 @@ module app.dashboard {
 	class DashboardCtrl {
     name: string;    
     
-		static $inject = ["dataAccessService"];
-    constructor(private dataAccessService: app.common.DataAccessService) {
+		static $inject = ["DataAccessService"];
+    constructor(private DataAccessService: app.common.DataAccessService) {
       // var vm = this;
 
       // dataAccessService.getName().then(function(user:SP.User) {

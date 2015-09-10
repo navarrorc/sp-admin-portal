@@ -1,9 +1,9 @@
 module app.common {
 	var web: SP.Web,
 		hostweburl: string,
-		appweburl: string,
-		user: SP.User;
-	
+		appweburl: string
+		//user: SP.User;
+
 	function getQueryStringParameter(param: string) {
 		var params = document.URL.split("?")[1].split("&");
 		var strParams = "";
@@ -14,75 +14,145 @@ module app.common {
 			}
 		}
 	}
+
+	/**
+	 * Current User
+	 */
+	function getSPCurrentUser(): JQueryPromise<{}> {
+		var context: SP.ClientContext,
+			factory: SP.ProxyWebRequestExecutorFactory,
+			appContextSite: SP.AppContextSite,
+			user: SP.User;
+
+		var deferred = $.Deferred();
+
+		context = new SP.ClientContext(appweburl);
+		factory = new SP.ProxyWebRequestExecutorFactory(appweburl);
+		context.set_webRequestExecutorFactory(factory);
+		appContextSite = new SP.AppContextSite(context, appweburl);
+
+		web = appContextSite.get_web();
+		user = web.get_currentUser();
+
+		context.load(user);
+		context.executeQueryAsync(
+			function() {
+				deferred.resolve(user);
+			},
+			function(sender: any, args: any) {
+				deferred.reject(sender, args);
+			}
+		);
+
+		return deferred.promise();
+	}
 	
-	function getSPName(): JQueryPromise<{}> {		
-			var context: SP.ClientContext,
-				factory: SP.ProxyWebRequestExecutorFactory,
-				appContextSite: SP.AppContextSite;
-				
-			var deferred = $.Deferred();
-			myPromise: $.Deferred();
-							
+	/**
+	 * User Profile
+	 */
+	function getSPUserProfile() {
+		var context: SP.ClientContext,
+		factory: SP.ProxyWebRequestExecutorFactory,
+		appContextSite: SP.AppContextSite,
+		peopleManager: SP.UserProfiles.PeopleManager,
+		personProperties: SP.UserProfiles.PersonProperties;
+
+		var deferred = $.Deferred();
+		
+		SP.SOD.executeOrDelayUntilScriptLoaded(getProperties, 'sp.userprofiles.js');
+		function getProperties() {
+			console.info("inside getProperties()");
+
 			context = new SP.ClientContext(appweburl);
 			factory = new SP.ProxyWebRequestExecutorFactory(appweburl);
 			context.set_webRequestExecutorFactory(factory);
 			appContextSite = new SP.AppContextSite(context, appweburl);
 
-			web = appContextSite.get_web();
-			user = web.get_currentUser();
 
-			context.load(user);
+			peopleManager = new SP.UserProfiles.PeopleManager(context);
+
+			personProperties = peopleManager.getMyProperties();
+
+			context.load(personProperties);
+
 			context.executeQueryAsync(
-				function () {
-					//console.log("before dfd.resolve(user) username is", user.get_title());
-					deferred.resolve(user);
-				}, 
-				function(sender:any, args:any) {
-					//console.log("Something Wrong Happened!", args);
-					deferred.reject(sender, args);					
+				function() {
+					var properties = personProperties.get_userProfileProperties();
+					console.info("first name: ", properties["FirstName"]);
+					deferred.resolve(properties);
+				},
+				function(sender: any, args: any) {
+					deferred.reject(sender, args);
 				}
-			);
+				);
+		}	
+		
+		return deferred.promise();		
+		
+	}
+
+	var sharePointReady = function() {
+		hostweburl = decodeURIComponent(getQueryStringParameter('SPHostUrl'));
+    appweburl = decodeURIComponent(getQueryStringParameter('SPAppWebUrl'));
+    var scriptbase = hostweburl + '/_layouts/15/';
+		return {
+			// Get the current SP.User using CSOM
+			getUser: function() {
+				return $.when(
+					$.getScript(scriptbase + 'init.js'),
+					$.getScript(scriptbase + 'SP.Core.js'),
+					$.getScript(scriptbase + 'SP.Runtime.js'),
+					$.getScript(scriptbase + 'SP.js'),
+					$.getScript(scriptbase + 'SP.RequestExecutor.js'),
+					$.Deferred(function(deferred) {
+						$(deferred.resolve);
+					})
+					).then(getSPCurrentUser); // returns a JQueryPromise<{}>
+			},
+			getUserProfile: function() {
+				return $.when(
+					// $.getScript(scriptbase + 'init.js', 
+					// 	function() {
+					// 		$.getScript(scriptbase + 'SP.Runtime.js', 
+					// 			function() {
+					// 				$.getScript(scriptbase + 'SP.js', 
+					// 					function() {
+					// 						$.getScript(scriptbase + 'SP.Taxonomy.js', 
+					// 							function() {
+					// 								$.getScript(scriptbase + 'SP.UserProfiles.js',
+					// 									function() {
+					// 										$.getScript(scriptbase + 'SP.RequestExecutor.js')
+					// 									})
+					// 							})
+					// 					})
+					// 			})
+					// 	})					
+					// $.getScript(scriptbase + 'init.js'),					
+					$.getScript(scriptbase + 'SP.RequestExecutor.js'),
+						$.Deferred(function(deferred) {
+							$(deferred.resolve);
+						})
+					).then(getSPUserProfile); // returns a JQueryPromise<{}>
+			}
 			
-			return deferred.promise();	
+		}
 	}
-	
-	
-	
-	function sharePointReady() {
-     hostweburl = decodeURIComponent(getQueryStringParameter('SPHostUrl'));
-     appweburl = decodeURIComponent(getQueryStringParameter('SPAppWebUrl'));		 
-     var scriptbase = hostweburl + '/_layouts/15/';
-		 
-		 return $.when(
-			 $.getScript(scriptbase + 'init.js'),
-			 $.getScript(scriptbase + 'sp.core.js'),
-			 $.getScript(scriptbase + 'SP.Runtime.js'),
-			 $.getScript(scriptbase + 'SP.js'),
-			 $.getScript(scriptbase + 'SP.RequestExecutor.js'),
-			 $.Deferred(function(deferred){
-				 $(deferred.resolve);
-			 })
-			 
-		 ).then(getSPName);
-   }
-	 
+
 	export class DataAccessService {
-
 		constructor() {
-			//sharePointReady();
 		}
 
-		getName() {			
-			return sharePointReady();
-			// myPromise.then(function(user:SP.User){
-			// 	console.info("SP.User username is: ", user.get_title());
-			// })
-			//return "Bob";
+		getUser() {
+			return sharePointReady().getUser();
+		}
+		
+		getProfile() {
+			return sharePointReady().getUserProfile();
 		}
 	}
-	
+
 	angular
-	.module("common.services")
-	.service("dataAccessService",
+		.module("common.services")
+		.service("DataAccessService",
 						DataAccessService);
 }

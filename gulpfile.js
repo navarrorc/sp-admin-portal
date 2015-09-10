@@ -3,6 +3,7 @@ var gulp = require('gulp'),
 	gutil = require('gulp-util'),
 	webserver = require('gulp-webserver'),
 	compass = require('gulp-compass'),
+	autoprefixer = require('gulp-autoprefixer'),
 	gulpif = require('gulp-if'),
 	uglify = require('gulp-uglify'),
 	minifyHTML = require('gulp-minify-html'),
@@ -97,6 +98,7 @@ gulp.task('sass', function () {
 			style: sassStyle
 		}))
 		.on('error', gutil.log)
+		.pipe(autoprefixer({browsers: ['last 2 versions', '> 5%']}))
 		.pipe(gulp.dest(outputDir + 'css'));
 });
  

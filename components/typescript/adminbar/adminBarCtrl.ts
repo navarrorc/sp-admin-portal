@@ -1,25 +1,33 @@
 module app.adminbar {	
 	class AdminBarCtrl {
-    name: string;    
+    name: string;
+		pictureUrl: string;    
     
-		static $inject = ["dataAccessService", "$scope"];
-    constructor(private dataAccessService: app.common.DataAccessService, $scope: ng.IScope) {
+		static $inject = ["DataAccessService", "$scope"];
+    constructor(private DataAccessService: app.common.DataAccessService, $scope: ng.IScope) {
       var vm = this;
-
-      // dataAccessService.getName().then(function(user:SP.User) {
-			// 	console.log("before vm.name", vm.name);
-				
-			// 	vm.name = user.get_title();
-			// });
-			//vm.name = dataAccessService.getName();
 			vm.name = "";
-			dataAccessService.getName().then(function(user:SP.User){				
-				vm.name = user.get_title();
-				//$scope is not updating so force with this command
-				if (!$scope.$$phase) {$scope.$apply();}
+			vm.pictureUrl = "";
+						
+			// DataAccessService.getUser().then(function(user:SP.User){				
+			// 	vm.name = user.get_title();
+			// 	console.info("username: ", vm.name);
+			// 	//$scope is not updating so force with this command
+			// 	if (!$scope.$$phase) {$scope.$apply();}				
+			// })
+			
+			DataAccessService.getProfile().then(function(properties: any){
+				vm.name = properties["FirstName"];
+				vm.pictureUrl = properties["PictureURL"];
+				var messageText = "";
+			  for (let key in properties) {
+            messageText += "<br />[" + key + "]: \"" + properties[key] + "\"";
+        }
 				
-				console.info("user name: ", vm.name);
+				if (!$scope.$$phase) {$scope.$apply();}	
+				console.info(messageText);
 			})
+			
     }
 	}
 	
