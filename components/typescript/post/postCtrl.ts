@@ -1,6 +1,17 @@
-module app.post {
+module app.post {	
 	
-	class PostCtrl {
+	// interface IPostModel {
+	// 	clickMe(): void;
+	// }
+	
+	class PostCtrl{			
+		constructor(){			
+		}
+		
+		clickMe():void {
+			console.info("I was clicked :)");
+			// SP.SOD.execute
+		}		
 		
 	}
 	

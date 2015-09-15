@@ -61,7 +61,7 @@ module app.common {
 		
 		SP.SOD.executeOrDelayUntilScriptLoaded(getProperties, 'sp.userprofiles.js');
 		function getProperties() {
-			console.info("inside getProperties()");
+			//console.info("inside getProperties()");
 
 			context = new SP.ClientContext(appweburl);
 			factory = new SP.ProxyWebRequestExecutorFactory(appweburl);
@@ -78,7 +78,7 @@ module app.common {
 			context.executeQueryAsync(
 				function() {
 					var properties = personProperties.get_userProfileProperties();
-					console.info("first name: ", properties["FirstName"]);
+					//console.info("first name: ", properties["FirstName"]);
 					deferred.resolve(properties);
 				},
 				function(sender: any, args: any) {

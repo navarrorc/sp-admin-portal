@@ -22,7 +22,6 @@
       <ul id="wp-admin-bar-top-secondary" class="ab-top-secondary ab-top-menu">
         <li id="wp-admin-bar-my-account" class="menupop with-avatar">
           <a class="ab-item" href="">
-            <!--<span id="username">Greetings!</span>-->
             Howdy, <span data-ng-bind="vm.name"></span>
             <img ng-src="{{vm.pictureUrl}}" class="avatar avatar-26 photo"
             height="26" width="26" alt="">
@@ -81,10 +80,12 @@
   <script type="text/javascript" src="https://rushenterprises.sharepoint.com/sites/dev/_layouts/15/sp.js"></script>
   <script type="text/javascript" src="https://rushenterprises.sharepoint.com/sites/dev/_layouts/15/sp.taxonomy.js"></script>
   <script type="text/javascript" src="https://rushenterprises.sharepoint.com/sites/dev/_layouts/15/sp.userprofiles.js"></script>
+  <script type="text/javascript" src="https://rushenterprises.sharepoint.com/sites/dev/_layouts/15/sp.publishing.js"></script>
 
   <!-- Application Script -->
   <script src="js/tsoutput.js"></script>
   <script>
+    // TODO: put this in a Controller
     function toggle() {
       document.getElementsByClassName('adminmenuback')[0].classList.toggle('collapsed');
       document.getElementsByClassName('adminmenuback-adminmenuwrap')[0].classList.toggle('collapsed');

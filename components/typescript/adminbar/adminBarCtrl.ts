@@ -25,7 +25,7 @@ module app.adminbar {
         }
 				
 				if (!$scope.$$phase) {$scope.$apply();}	
-				console.info(messageText);
+				//console.info(messageText);
 			})
 			
     }
